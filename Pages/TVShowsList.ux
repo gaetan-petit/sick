@@ -1,0 +1,54 @@
+<DockPanel ux:Class="TVShowsList" Background="{Colors.primary}">
+    <Text ux:Class="Header" TextColor="{Colors.blue}" Font="BoldFont" FontSize="22"></Text>
+    <Text ux:Class="MenuItem" TextColor="{Colors.blue}" Font="BoldFont" FontSize="12"></Text>
+
+    <Panel Dock="Top" Height="100" Color="{Colors.primary}">
+        <Grid RowCount="2">
+            <Header Alignment="Center" Value="TV SHOWS" />
+            <ScrollView AllowedScrollDirections="Horizontal">
+                <StackPanel Orientation="Horizontal" ItemSpacing="30" Padding="40, 10, 0, 40">
+                    <MenuItem Value="UPCOMING" />
+                    <MenuItem Value="A-Z" />
+                    <MenuItem Value="ACTIVE" />
+                    <MenuItem Value="PAUSED" />
+                    <MenuItem Value="ANIME" />
+                </StackPanel>
+            </ScrollView>
+        </Grid>
+    </Panel>
+
+    <Text ux:Class="ShowTitle" Font="BlackFont" TextColor="White"
+    Margin="0,9" />
+    <Text ux:Class="ShowDesc" Font="RegularFont" FontSize="13" TextColor="{Colors.grey}"
+    Margin="0,1" />
+
+    <ScrollView Layer="Background" Margin="0,100,0,0">
+        <StackPanel Alignment="Top" Padding="0,0,0,50">
+            <JavaScript File="../scripts/TVShowsList.js" />
+            <Each Items="{shows}">
+                <Grid ColumnData="1*,1*" Height="120">
+                    <Panel>
+                        <Image Url="{fanart}" StretchMode="UniformToFill" />
+                    </Panel>
+                    <Panel Background="{Colors.odd}">
+                        <StackPanel Padding="20,10">
+                            <ShowTitle Value="{show_name}" />
+                            <StackPanel Orientation="Horizontal">
+                                <ShowDesc Value="Network: " />
+                                <ShowDesc Value="{network}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ShowDesc Value="Status: " />
+                                <ShowDesc Value="{status}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ShowDesc Value="Next: " />
+                                <ShowDesc Value="{next_ep_airdate}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Panel>
+                </Grid>
+            </Each>
+        </StackPanel>
+    </ScrollView>
+</DockPanel>

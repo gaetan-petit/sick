@@ -1,0 +1,46 @@
+<App Theme="Basic">
+    <JavaScript File="scripts/Colors.js" ux:Global="Colors" />
+    <JavaScript File="scripts/Main.js" />
+
+    <Font File="Assets/fonts/Lato-Regular.ttf" ux:Global="RegularFont" />
+    <Font File="Assets/fonts/Lato-Black.ttf" ux:Global="BlackFont" />
+    <Font File="Assets/fonts/Lato-Bold.ttf" ux:Global="BoldFont" />
+
+    <ClientPanel>
+        <Panel>
+            <Image ux:Class="PageIcon" Height="15" Width="20" Margin="0,10,0,6" StretchMode="Uniform" Color="White" />
+            <Text ux:Class="PageItem" Font="RegularFont" FontSize="10" TextColor="White" Alignment="Center" />
+
+            <Panel Height="50" Alignment="Bottom" Color="{Colors.primary}" Opacity=".9">
+                <Grid Columns="1*,1*,1*,1*">
+                    <StackPanel>
+                        <PageIcon ux:Name="ShowMenuIcon" File="Assets/images/TVShow_ico.png" />
+                        <PageItem ux:Name="ShowMenuText" Value="TV SHOWS" />
+                    </StackPanel>
+                    <StackPanel>
+                        <PageIcon File="Assets/images/movies_ico.png" />
+                        <PageItem Value="MOVIES" />
+                    </StackPanel>
+                    <StackPanel>
+                        <PageIcon File="Assets/images/movies_ico.png" />
+                        <PageItem Value="MOVIES" />
+                    </StackPanel>
+                    <StackPanel>
+                        <PageIcon File="Assets/images/movies_ico.png" />
+                        <PageItem Value="MOVIES" />
+                    </StackPanel>
+                </Grid>
+            </Panel>
+
+            <PageControl ux:Name="pages">
+                <Page ux:Name="TVShowsList">
+                    <WhileActive Threshold="0.5">
+                        <Change Target="ShowMenuIcon.Color" Value="{Colors.blue}" Duration=".2" />
+                        <Change Target="ShowMenuText.TextColor" Value="{Colors.blue}" Duration=".2" />
+                    </WhileActive>
+                    <TVShowsList />
+                </Page>
+            </PageControl>
+        </Panel>
+    </ClientPanel>
+</App>
