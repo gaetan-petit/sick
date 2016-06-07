@@ -1,14 +1,24 @@
 var Observable = require('FuseJS/Observable');
+var showsList = Observable();
 var shows = Observable();
 
-getShowsList(shows);
+function getShows(args) {
+    console.log('load shows');
+    filterShows(args.sort);
+}
+
+getShowsList();
+//filterShows(showsList, shows, 'default');
+shows = showsList;
 
 module.exports = {
+    showsList: showsList,
     shows: shows,
+    getShows: getShows,
 };
 
-function getShowsList(shows) {
-    fetch('http://www.mocky.io/v2/5742ae1f0f00008715a576dc')
+function getShowsList() {
+    fetch('http://www.mocky.io/v2/5749c1122700005b193735dc')
     .then(
          function(response) {
             if (response.status !== 200) {
@@ -16,16 +26,11 @@ function getShowsList(shows) {
                 response.status);
                 return;
             }
-            // Examine the text in the response
             response.json().then(function(data) {
                 var keys = Object.keys(data.data);
-                return Promise.all(
-                    keys.map(function(key) {return getFanart(data.data[key]);})
-                );
-            }).then(function(showsList) {
-                console.log(JSON.stringify(showsList));
-                showsList.forEach(function(show) {
-                    shows.add(show);
+                keys.forEach(function(key) {
+                    showsList.add(data.data[key]);
+                    getFanart(data.data[key]);
                 });
             })
         })
@@ -34,7 +39,17 @@ function getShowsList(shows) {
     });
 }
 
+function filterShows(sort) {
+    console.log(showsList.length);
+    var filtered = showsList;
+    var filtered = showsList.map(function(item) {
+        return item;
+    });
+    shows.refreshAll(filtered);
+}
+
 function getFanart(show) {
+  var originalShow = show;
   return fetch('https://webservice.fanart.tv/v3/tv/' + show.indexerid + '?api_key=865946a302a802eccf3bbd1c218b496e')
     .then(function(response) {
       if (response.status !== 200) {
@@ -45,11 +60,14 @@ function getFanart(show) {
       return response.json().then(function(json) {
         if(json.hasOwnProperty('tvthumb')) {
             show.fanart = json.tvthumb[0].url;
+        } else if(json.hasOwnProperty('hdtvlogo')) {
+            show.fanart = json.hdtvlogo[0].url;
         } else {
-              show.fanart = '';
+            show.fanart = '';
         }
-        console.log(show.fanart);
-        return show;
+        if(shows.contains(originalShow)) {
+            showsList.replaceAt(showsList.indexOf(originalShow), show);
+        }
       });
     })
     .catch(function(err) {

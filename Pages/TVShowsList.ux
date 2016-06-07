@@ -1,32 +1,81 @@
 <DockPanel ux:Class="TVShowsList" Background="{Colors.primary}">
-    <Text ux:Class="Header" TextColor="{Colors.blue}" Font="BoldFont" FontSize="22"></Text>
-    <Text ux:Class="MenuItem" TextColor="{Colors.blue}" Font="BoldFont" FontSize="12"></Text>
+    <JavaScript File="../scripts/TVShowsList.js" />
+    <UserEvent Name="FilterShows"/>
+    <OnUserEvent EventName="FilterShows" Handler="{getShows}" />
+
+    <Text ux:Class="Header" Color="{Colors.blue}" Font="BoldFont" FontSize="22"></Text>
+    <Panel ux:Class="MenuItem" ux:Name="self" ClipToBounds="false" Margin="0,10">
+        <string ux:Property="Text" />
+        <Text Value="{Property self.Text}" Color="{Colors.blue}" Font="BoldFont" FontSize="12" Alignment="Center" />
+    </Panel>
 
     <Panel Dock="Top" Height="100" Color="{Colors.primary}">
         <Grid RowCount="2">
             <Header Alignment="Center" Value="TV SHOWS" />
-            <ScrollView AllowedScrollDirections="Horizontal">
-                <StackPanel Orientation="Horizontal" ItemSpacing="30" Padding="40, 10, 0, 40">
-                    <MenuItem Value="UPCOMING" />
-                    <MenuItem Value="A-Z" />
-                    <MenuItem Value="ACTIVE" />
-                    <MenuItem Value="PAUSED" />
-                    <MenuItem Value="ANIME" />
-                </StackPanel>
-            </ScrollView>
+            <StackPanel >
+                <MultiLayoutPanel ux:Name="tabBar">
+                    <GridLayout ColumnCount="4" Rows="1*"/>
+                    <Panel ux:Name="azTab" HitTestMode="LocalBoundsAndChildren">
+                        <Placeholder>
+                            <Rectangle ux:Name="indicator" Alignment="Bottom" Height="2.5" Fill="{Colors.blue}" CornerRadius="5" Margin="15,0">
+                                <LayoutAnimation>
+                                    <Move RelativeTo="LayoutChange" X="1" Duration="0.3" Easing="BackIn"/>
+                                </LayoutAnimation>
+                            </Rectangle>
+                        </Placeholder>
+                        <MenuItem Text="A-Z" />
+                        <Clicked>
+                            <Set tabBar.LayoutElement="azTab" />
+                            <RaiseUserEvent Name="FilterShows">
+                                <UserEventArg Name="sort" StringValue="default" />
+                            </RaiseUserEvent>
+                        </Clicked>
+                    </Panel>
+                    <Panel ux:Name="activeTab" HitTestMode="LocalBoundsAndChildren">
+                        <Placeholder Target="indicator" />
+                        <MenuItem Text="ACTIVE" />
+                        <Clicked>
+                            <Set tabBar.LayoutElement="activeTab" />
+                            <RaiseUserEvent Name="FilterShows">
+                                <UserEventArg Name="sort" StringValue="active" />
+                            </RaiseUserEvent>
+                        </Clicked>
+                    </Panel>
+                    <Panel ux:Name="pausedTab" HitTestMode="LocalBoundsAndChildren">
+                        <Placeholder Target="indicator" />
+                        <MenuItem Text="PAUSED" />
+                        <Clicked>
+                            <Set tabBar.LayoutElement="pausedTab" />
+                            <RaiseUserEvent Name="FilterShows">
+                                <UserEventArg Name="sort" StringValue="paused" />
+                            </RaiseUserEvent>
+                        </Clicked>
+                    </Panel>
+                    <Panel ux:Name="animeTab" HitTestMode="LocalBoundsAndChildren">
+                        <Placeholder Target="indicator" />
+                        <MenuItem Text="ANIME" />
+                        <Clicked>
+                            <Set tabBar.LayoutElement="animeTab" />
+                            <RaiseUserEvent Name="FilterShows">
+                                <UserEventArg Name="sort" StringValue="anime" />
+                            </RaiseUserEvent>
+                        </Clicked>
+                    </Panel>
+
+                </MultiLayoutPanel>
+            </StackPanel>
         </Grid>
     </Panel>
 
-    <Text ux:Class="ShowTitle" Font="BlackFont" TextColor="White"
+    <Text ux:Class="ShowTitle" Font="BlackFont" Color="White"
     Margin="0,9" />
-    <Text ux:Class="ShowDesc" Font="RegularFont" FontSize="13" TextColor="{Colors.grey}"
+    <Text ux:Class="ShowDesc" Font="RegularFont" FontSize="13" Color="{Colors.grey}"
     Margin="0,1" />
 
     <ScrollView Layer="Background" Margin="0,100,0,0">
         <StackPanel Alignment="Top" Padding="0,0,0,50">
-            <JavaScript File="../scripts/TVShowsList.js" />
             <Each Items="{shows}">
-                <Grid ColumnData="1*,1*" Height="120">
+                <Grid Columns="1*,1*" Height="120">
                     <Panel>
                         <Image Url="{fanart}" StretchMode="UniformToFill" />
                     </Panel>
